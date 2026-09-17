@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Team Portal - Arquitectura Cloud (EC2, Lambda, S3, CloudFront)
+
+Resources:
+  # 1. Almacenamiento S3 para el Frontend (Angular)
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+  # 2. Distribución CloudFront para servir el Frontend
+  FrontendDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            Id: S3Origin
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+
+  # 3. Función AWS Lambda para las Métricas del Dashboard
+  DashboardMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: team-lambda/
+      Handler: server.lambdaHandler
+      Runtime: nodejs20.x
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /metrics
+            Method: get
+
+  # 4. Instancia EC2 para alojar contenedores de BD y API
+  BackendEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-0c55b159cbfafe1f0 # Amazon Linux 2 AMI
+      Tags:
+        - Key: Name
+          Value: TeamPortal-Backend-Server
+
+Outputs:
+  FrontendURL:
+    Description: URL de CloudFront
+    Value: !GetAtt FrontendDistribution.DomainName
+  LambdaApiURL:
+    Description: URL del API Gateway para la Lambda
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/metrics"
