@@ -73,3 +73,8 @@ Abre una terminal en el directorio raíz del proyecto (donde se encuentra el arc
 
 ```bash
 docker compose up -d --build
+
+### Paso 2: Ejecuta
+Entra a la carpeta del proyecto y ejecuta este comando:
+```bash
+ng serve
