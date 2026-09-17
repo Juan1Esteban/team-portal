@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # 1. Contenedor de la Base de Datos (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: team_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: team_portal_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Volumen para persistencia de datos (Requisito de la prueba)
+      - postgres_data:/var/lib/postgresql/data
+      # Inyecta el script inicial automáticamente
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  # 2. Contenedor de la API (Node.js)
+  api:
+    build: ./team-api
+    container_name: team_api
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_HOST: db # Apunta al nombre del servicio de la base de datos
+      DB_NAME: team_portal_db
+      DB_PORT: 5432
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
