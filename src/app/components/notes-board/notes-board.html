@@ -1,0 +1,18 @@
+<div class="row">
+  <!-- Columna TODO -->
+  <div class="col-md-4">
+    <h3>Por Hacer</h3>
+    @for (note of (notes$ | async); track note.id) {
+      @if (note.status === 'todo') {
+        <div class="card mb-2 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ note.title }}</h5>
+            <p class="card-text">{{ note.content }}</p>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Repite la columna para 'in-progress' y 'done' -->
+</div>

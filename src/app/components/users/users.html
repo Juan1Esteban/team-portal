@@ -1,0 +1,91 @@
+<div class="row">
+  <!-- Formulario de Creación/Edición -->
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        {{ isEditing ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}
+      </div>
+      <div class="card-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="mb-2">
+            <label>Nombre</label>
+            <input type="text" class="form-control" formControlName="name">
+          </div>
+          <div class="mb-2">
+            <label>Correo Electrónico</label>
+            <input type="email" class="form-control" formControlName="email">
+          </div>
+          <div class="mb-2">
+            <label>Contraseña (Para inicio de sesión)</label>
+            <input type="text" class="form-control" formControlName="password">
+          </div>
+          <div class="mb-3">
+            <label>Rol</label>
+            <select class="form-select" formControlName="role">
+              <option value="Administrador">Administrador</option>
+              <option value="Usuario">Usuario</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100" [disabled]="userForm.invalid">
+            {{ isEditing ? 'Guardar Cambios' : 'Registrar Usuario' }}
+          </button>
+
+          @if (isEditing) {
+            <button type="button" class="btn btn-secondary w-100 mt-2" (click)="cancelEdit()">
+              Cancelar Edición
+            </button>
+          }
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Usuarios (Lista) -->
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4>Lista de Equipo</h4>
+        <table class="table table-hover mt-3">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users$ | async; track user.id) {
+              <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <span class="badge" [ngClass]="user.role === 'Administrador' ? 'bg-primary' : 'bg-info'">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="user.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="editUser(user)">
+                    Editar
+                  </button>
+                  <button class="btn btn-sm"
+                          [ngClass]="user.isActive ? 'btn-outline-danger' : 'btn-outline-success'"
+                          (click)="toggleStatus(user.id)">
+                    {{ user.isActive ? 'Desactivar' : 'Reactivar' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
