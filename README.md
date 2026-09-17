@@ -59,6 +59,22 @@ Asegúrate de tener instalados los siguientes componentes en tu máquina:
 
 ---
 
+## ☁️ Despliegue en AWS (Infraestructura como Código)
+
+La arquitectura en la nube está definida en el archivo `template.yaml` utilizando AWS SAM y CloudFormation. 
+*   **Frontend:** Alojado en **S3** y distribuido globalmente mediante **CloudFront**.
+*   **Backend (API & BD):** Ejecutado mediante contenedores Docker dentro de una instancia **EC2**.
+*   **Cálculo de Métricas:** Procesado sin servidor a través de **AWS Lambda**.
+
+### Comandos de Despliegue (AWS CLI / SAM)
+Para empaquetar y subir la infraestructura a una cuenta real de AWS, ejecuta en la raíz del proyecto:
+1. `sam build` (Prepara el código y las dependencias de la Lambda).
+2. `sam deploy --guided` (Sigue el asistente interactivo para provisionar EC2, S3, CloudFront y Lambda).
+
+### Comandos de Retirada (Destrucción de recursos)
+Para eliminar completamente los recursos creados y evitar cargos en la facturación de AWS:
+1. `sam delete`
+
 ## 🚀 Guía de Instalación y Ejecución
 
 Sigue estos pasos para levantar el proyecto en tu entorno local sin depender de servicios externos.
@@ -68,13 +84,16 @@ Si es tu primera vez corriendo un proyecto de Angular en esta máquina, instala 
 ```bash
 npm install -g @angular/cli
 
+
 ### Paso 2: Levantar el Backend y la Base de Datos (Docker)
 Abre una terminal en el directorio raíz del proyecto (donde se encuentra el archivo `docker-compose.yml`) y ejecuta:
 
 ```bash
 docker compose up -d --build
 
-### Paso 2: Ejecuta
+
+### Paso 3: Ejecuta
 Entra a la carpeta del proyecto y ejecuta este comando:
 ```bash
 ng serve
+

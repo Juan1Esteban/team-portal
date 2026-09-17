@@ -1,8 +1,8 @@
 <div class="container mt-4 mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="text-light fw-bold m-0">Dashboard de Productividad</h2>
-      <small class="text-secondary">Métricas procesadas vía AWS Lambda</small>
+      <h2 class="text-dark fw-bold m-0">Dashboard de Productividad</h2>
+      <small class="text-dark-secondary">Métricas procesadas vía AWS Lambda</small>
     </div>
     <button class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="fetchMetrics()">
       <i class="bi bi-arrow-clockwise"></i> Actualizar Datos
@@ -21,8 +21,8 @@
       <div class="col-md-3">
         <div class="card metric-card bg-dark border-secondary h-100 rounded-4">
           <div class="card-body text-center d-flex flex-column justify-content-center">
-            <h6 class="text-secondary text-uppercase tracking-wide">Total Notas</h6>
-            <h1 class="display-4 text-light fw-bold m-0">{{ metrics.totalNotes }}</h1>
+            <h6 class="text-dark-secondary text-uppercase tracking-wide">Total Notas</h6>
+            <h1 class="display-4 text-dark fw-bold m-0">{{ metrics.totalNotes }}</h1>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
         <div class="card metric-card bg-dark border-warning h-100 rounded-4" style="border-width: 2px;">
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <h6 class="text-warning text-uppercase tracking-wide">Pendientes</h6>
-            <h1 class="display-4 text-light fw-bold m-0">{{ metrics.pending }}</h1>
+            <h1 class="display-4 text-dark fw-bold m-0">{{ metrics.pending }}</h1>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="card metric-card bg-dark border-info h-100 rounded-4" style="border-width: 2px;">
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <h6 class="text-info text-uppercase tracking-wide">En Curso</h6>
-            <h1 class="display-4 text-light fw-bold m-0">{{ metrics.inProgress }}</h1>
+            <h1 class="display-4 text-dark fw-bold m-0">{{ metrics.inProgress }}</h1>
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <div class="card metric-card bg-dark border-success h-100 rounded-4" style="border-width: 2px;">
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <h6 class="text-success text-uppercase tracking-wide">Hechas</h6>
-            <h1 class="display-4 text-light fw-bold m-0">{{ metrics.done }}</h1>
+            <h1 class="display-4 text-dark fw-bold m-0">{{ metrics.done }}</h1>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
       <div class="col-12">
         <div class="card bg-dark border-secondary rounded-4 shadow">
           <div class="card-body">
-            <h5 class="text-light mb-4 text-center">Distribución de Estados</h5>
+            <h5 class="text-dark mb-4 text-center">Distribución de Estados</h5>
             <!-- Contenedor del Canvas -->
             <div style="position: relative; height: 350px; width: 100%;">
               <canvas id="metricsChart"></canvas>
@@ -74,7 +74,7 @@
     </div>
 
   } @else if (!errorMsg) {
-    <div class="d-flex justify-content-center align-items-center text-light mt-5 flex-column" style="height: 200px;">
+    <div class="d-flex justify-content-center align-items-center text-dark mt-5 flex-column" style="height: 200px;">
       <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
       <h5>Analizando datos en AWS Lambda...</h5>
     </div>

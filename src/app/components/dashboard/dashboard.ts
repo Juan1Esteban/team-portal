@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Chart, registerables } from 'chart.js'; // Importamos Chart.js
+import { Chart, registerables } from 'chart.js';
 
 export interface DashboardMetrics {
   totalNotes: number;
@@ -15,10 +15,12 @@ export interface DashboardMetrics {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss'] // O .css según lo tengas
+  styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
   private http = inject(HttpClient);
+  // 1. Inyectamos el verificador de plataforma
+  private platformId = inject(PLATFORM_ID);
   private lambdaUrl = 'http://localhost:3001/metrics';
 
   metrics: DashboardMetrics | null = null;
@@ -26,12 +28,17 @@ export class Dashboard implements OnInit {
   chart: any = null;
 
   constructor() {
-    // Registramos los componentes de la gráfica
-    Chart.register(...registerables);
+    // 2. Solo registramos Chart.js en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      Chart.register(...registerables);
+    }
   }
 
   ngOnInit() {
-    this.fetchMetrics();
+    // 3. Solo hacemos la petición automática si estamos en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.fetchMetrics();
+    }
   }
 
   fetchMetrics() {
@@ -39,7 +46,6 @@ export class Dashboard implements OnInit {
       next: (data) => {
         this.metrics = data;
         this.errorMsg = '';
-        // Pequeña pausa para asegurar que el HTML ya se renderizó antes de dibujar
         setTimeout(() => this.renderChart(data), 50);
       },
       error: (err) => {
@@ -49,15 +55,15 @@ export class Dashboard implements OnInit {
   }
 
   renderChart(data: DashboardMetrics) {
+    if (!isPlatformBrowser(this.platformId)) return; // Doble validación por seguridad
+
     const canvas = document.getElementById('metricsChart') as HTMLCanvasElement;
     if (!canvas) return;
 
-    // Si ya existía un gráfico anterior, lo destruimos para no sobreponerlos
     if (this.chart) {
       this.chart.destroy();
     }
 
-    // Creamos el gráfico de Dona interactivo
     this.chart = new Chart(canvas, {
       type: 'doughnut',
       data: {
@@ -76,7 +82,8 @@ export class Dashboard implements OnInit {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { color: '#f8f9fa', font: { size: 14 } }
+            // Cambiado a texto oscuro para que se vea en tu fondo blanco
+            labels: { color: '#212529', font: { size: 14 } }
           }
         }
       }
