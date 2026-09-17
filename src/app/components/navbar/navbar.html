@@ -7,18 +7,35 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <!-- Enlaces que cumplen con tus rutas -->
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Actividad</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/users" routerLinkActive="active">Equipo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/notes" routerLinkActive="active">Tablero de Notas</a>
-        </li>
-      </ul>
+
+      <!-- Todo este bloque SOLO se muestra si hay un usuario logueado -->
+      @if (currentUser$ | async; as user) {
+
+        <!-- Enlaces principales alineados a la izquierda -->
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Actividad</a>
+          </li>
+
+          <!-- La pestaña Equipo SOLO la ven los administradores -->
+          @if (user.role === 'Administrador') {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/users" routerLinkActive="active">Equipo</a>
+            </li>
+          }
+
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/notes" routerLinkActive="active">Tablero de Notas</a>
+          </li>
+        </ul>
+
+        <!-- Nombre del usuario y botón de salir alineados a la derecha -->
+        <div class="d-flex align-items-center">
+          <span class="text-light me-3">Hola, {{ user.name }} ({{ user.role }})</span>
+          <button class="btn btn-outline-danger btn-sm" (click)="logout()">Cerrar Sesión</button>
+        </div>
+
+      }
     </div>
   </div>
 </nav>

@@ -8,11 +8,13 @@ Cuentas de acceso (Credenciales):
 Rol Administrador:
 
 Email: admin@demo.com
+
 Contraseña: admin
 
 Rol Usuario:
 
 Email: user@demo.com
+
 Contraseña: user
 
 ¿Cómo inician sesión los usuarios creados desde la aplicación?

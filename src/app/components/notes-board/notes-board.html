@@ -1,18 +1,62 @@
-<div class="row">
-  <!-- Columna TODO -->
-  <div class="col-md-4">
-    <h3>Por Hacer</h3>
-    @for (note of (notes$ | async); track note.id) {
-      @if (note.status === 'todo') {
-        <div class="card mb-2 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{ note.title }}</h5>
-            <p class="card-text">{{ note.content }}</p>
-          </div>
-        </div>
-      }
-    }
+<div class="container-fluid py-3 h-100 d-flex flex-column">
+
+  <!-- Panel Superior: Crear Nota -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-light">Tablero de Notas (Lienzo Libre)</h2>
+
+    <div class="d-flex gap-2">
+      <input type="text" class="form-control" placeholder="Título" [(ngModel)]="newNote.title">
+      <input type="text" class="form-control" placeholder="Contenido" [(ngModel)]="newNote.content">
+      <select class="form-select" [(ngModel)]="newNote.status">
+        <option value="Pendiente">Pendiente</option>
+        <option value="En curso">En curso</option>
+        <option value="Hecho">Hecho</option>
+      </select>
+      <button class="btn btn-primary" (click)="createNote()">Crear Nota</button>
+      <button class="btn btn-warning" (click)="rescueNotes()">🚑 Rescatar Notas</button>
+    </div>
   </div>
 
-  <!-- Repite la columna para 'in-progress' y 'done' -->
+  <!-- LIENZO DE ARRASTRE -->
+  <div class="board-canvas position-relative flex-grow-1 bg-dark rounded border border-secondary overflow-hidden">
+
+    @for (note of notes$ | async; track note.id) {
+
+      <!-- NOTA INDIVIDUAL (Directiva cdkDrag aplicada) -->
+      <div class="note-card card shadow position-absolute"
+            cdkDragBoundary=".board-canvas"
+           cdkDrag
+           [cdkDragFreeDragPosition]="{x: note.positionX, y: note.positionY}"
+           (cdkDragEnded)="onDragEnded($event, note)"
+           [ngClass]="{
+             'bg-warning': note.status === 'Pendiente',
+             'bg-info': note.status === 'En curso',
+             'bg-success text-white': note.status === 'Hecho'
+           }">
+
+        <!-- Zona de agarre -->
+        <div class="card-header py-1 px-2 d-flex justify-content-between align-items-center cdk-drag-handle text-dark" style="cursor: grab;">
+          <small class="fw-bold m-0">::: Mover</small>
+          <button class="btn-close btn-close-sm" (click)="deleteNote(note.id)"></button>
+        </div>
+
+        <!-- Contenido Editable -->
+        <div class="card-body p-2 d-flex flex-column gap-2">
+          <input type="text" class="form-control fw-bold border-0 bg-transparent shadow-none px-1 text-dark"
+                 [(ngModel)]="note.title" (change)="updateNoteContent(note)">
+
+          <textarea class="form-control border-0 bg-transparent shadow-none px-1 text-dark"
+                    rows="3" [(ngModel)]="note.content" (change)="updateNoteContent(note)"></textarea>
+
+          <select class="form-select form-select-sm border-0 bg-white bg-opacity-50 mt-auto text-dark"
+                  [(ngModel)]="note.status" (change)="updateNoteContent(note)">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En curso">En curso</option>
+            <option value="Hecho">Hecho</option>
+          </select>
+        </div>
+      </div>
+
+    }
+  </div>
 </div>

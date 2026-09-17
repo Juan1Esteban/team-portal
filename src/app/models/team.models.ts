@@ -13,7 +13,9 @@ export interface Note {
   id: string;
   title: string;
   content: string;
-  status: 'todo' | 'in-progress' | 'done';
+  status: 'Pendiente' | 'En curso' | 'Hecho';
+  positionX: number;
+  positionY: number;
 }
 
 export interface Activity {

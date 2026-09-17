@@ -1,0 +1,29 @@
+.board-canvas {
+  min-height: 75vh;
+  /* Fondo sutil cuadriculado */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.note-card {
+  width: 260px;
+  min-height: 200px;
+  z-index: 10;
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Efecto al levantar la nota */
+.note-card:active {
+  box-shadow: 0 15px 25px rgba(0,0,0,0.5) !important;
+  z-index: 100;
+}
+
+.cdk-drag-handle {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Ocultar el scroll del textarea de las notas */
+textarea::-webkit-scrollbar {
+  display: none;
+}
